@@ -17,15 +17,14 @@
     *, *::before, *::after { box-sizing: border-box; }
 
     :root {
-      --bg:        #0f1117;
       --surface:   #1a1d27;
       --border:    #2a2d3d;
       --accent:    #4f6ef7;
       --accent-hl: #7b93ff;
+      --bg:        #0f1117;
       --text:      #e8eaf2;
       --muted:     #7a7f9a;
       --danger:    #e05c6a;
-      --radius:    12px;
       --header-h:  58px;
     }
 
@@ -41,7 +40,7 @@
     .login-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 12px;
       padding: 48px 40px 40px;
       width: 100%;
       max-width: 400px;
@@ -164,22 +163,19 @@
     }
     .btn-logout:hover { color: var(--text); border-color: var(--muted); }
 
-    /* ── IFRAME ── */
+    /* ── IFRAME ocupa tudo ── */
     .iframe-outer {
       flex: 1;
       overflow: hidden;
       position: relative;
-      background: #fff;
     }
 
-    .iframe-scaler {
+    .iframe-outer iframe {
       position: absolute;
-      transform-origin: top left;
-    }
-
-    .iframe-scaler iframe {
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
       border: none;
-      display: block;
     }
   </style>
 </head>
@@ -211,45 +207,19 @@
       <button class="btn-logout" onclick="sair()">Sair</button>
     </header>
 
-    <div class="iframe-outer" id="iframe-outer">
-      <div class="iframe-scaler" id="iframe-scaler">
-        <iframe
-          id="pbi-frame"
-          title="[MT1] - Painel de Serviços"
-          allowfullscreen="true"
-          src="">
-        </iframe>
-      </div>
+    <div class="iframe-outer">
+      <iframe
+        id="pbi-frame"
+        title="[MT1] - Painel de Serviços"
+        allowfullscreen="true"
+        src="">
+      </iframe>
     </div>
   </div>
 
   <script>
     const SENHA_CORRETA = 'comercialmt1';
-    // URL base sem pageName para mostrar navegação entre páginas
     const PBI_URL = 'https://app.powerbi.com/view?r=eyJrIjoiZmQ4YzM4OTUtZjAzNS00NGFhLWI1Y2MtYWMzZTNiN2IwZDRmIiwidCI6IjNhZDRhYjQ1LTg4YmQtNGMyYi05YmRhLWFmMzBiODM0ZDI0MCJ9';
-
-    // Dimensões reais do relatório (do iframe oficial do Power BI)
-    const PBI_W = 1024;
-    const PBI_H = 1060;
-
-    function escalarIframe() {
-      const outer  = document.getElementById('iframe-outer');
-      const scaler = document.getElementById('iframe-scaler');
-      const frame  = document.getElementById('pbi-frame');
-
-      const availW = outer.clientWidth;
-      const availH = outer.clientHeight;
-      const scale  = Math.min(availW / PBI_W, availH / PBI_H);
-
-      frame.style.width  = PBI_W + 'px';
-      frame.style.height = PBI_H + 'px';
-      scaler.style.width  = PBI_W + 'px';
-      scaler.style.height = PBI_H + 'px';
-      scaler.style.transform = `scale(${scale})`;
-
-      scaler.style.left = ((availW - PBI_W * scale) / 2) + 'px';
-      scaler.style.top  = ((availH - PBI_H * scale) / 2) + 'px';
-    }
 
     function entrar() {
       const valor = document.getElementById('senha').value;
@@ -268,7 +238,6 @@
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('dashboard-screen').style.display = 'flex';
       document.getElementById('pbi-frame').src = PBI_URL;
-      setTimeout(escalarIframe, 50);
     }
 
     function sair() {
@@ -279,8 +248,6 @@
       document.getElementById('senha').value = '';
       document.getElementById('erro').textContent = '';
     }
-
-    window.addEventListener('resize', escalarIframe);
 
     if (sessionStorage.getItem('mt1_auth') === '1') mostrarDashboard();
 
