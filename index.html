@@ -13,7 +13,6 @@
       background: #0f1117;
       color: #e8eaf2;
       font-family: 'Inter', sans-serif;
-      overflow: hidden;
     }
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -26,14 +25,13 @@
       --text:      #e8eaf2;
       --muted:     #7a7f9a;
       --danger:    #e05c6a;
-      --header-h:  58px;
     }
 
-    #login-screen {
-      height: 100%;
+    body {
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 100vh;
       padding: 24px;
     }
 
@@ -53,7 +51,7 @@
       color: var(--accent-hl); margin-bottom: 8px;
     }
 
-    .login-card h1 {
+    h1 {
       font-family: 'Sora', sans-serif;
       font-size: 26px; font-weight: 700;
       line-height: 1.2; margin-bottom: 6px; color: #fff;
@@ -92,129 +90,36 @@
       color: var(--danger); text-align: center; min-height: 20px;
     }
 
-    /* DASHBOARD */
-    #dashboard-screen {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    header {
-      height: var(--header-h);
-      display: flex; align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-dot {
-      width: 10px; height: 10px; background: var(--accent);
-      border-radius: 50%; box-shadow: 0 0 8px var(--accent);
-    }
-    .brand-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
-    .brand-sub  { font-size: 12px; color: var(--muted); }
-
-    .btn-logout {
-      background: transparent; border: 1px solid var(--border);
-      border-radius: 7px; padding: 7px 14px; font-size: 12px;
-      font-weight: 500; color: var(--muted); cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: color .2s, border-color .2s;
-    }
-    .btn-logout:hover { color: var(--text); border-color: var(--muted); }
-
-    /* IFRAME wrapper com padding-top para manter proporção 16:9 */
-    .iframe-outer {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: #fff;
-    }
-
-    .iframe-outer iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+    .info {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-
-  <div id="login-screen">
-    <div class="login-card">
-      <p class="eyebrow">MT1 · Comercial</p>
-      <h1>Painel de<br>Serviços</h1>
-      <p class="subtitle">Acesso restrito à equipe autorizada.</p>
-      <label for="senha">Senha de acesso</label>
-      <input type="password" id="senha" placeholder="••••••••••" autocomplete="current-password"/>
-      <button class="btn-login" onclick="entrar()">Entrar</button>
-      <p class="error-msg" id="erro"></p>
-    </div>
-  </div>
-
-  <div id="dashboard-screen">
-    <header>
-      <div class="brand">
-        <div class="brand-dot"></div>
-        <div>
-          <div class="brand-name">Painel de Serviços</div>
-          <div class="brand-sub">MT1 · Acompanhamento</div>
-        </div>
-      </div>
-      <button class="btn-logout" onclick="sair()">Sair</button>
-    </header>
-
-    <div class="iframe-outer" id="iframe-outer">
-      <iframe
-        id="pbi-frame"
-        title="[MT1] - Painel de Serviços"
-        allowfullscreen="true"
-        src="">
-      </iframe>
-    </div>
+  <div class="login-card">
+    <p class="eyebrow">MT1 · Comercial</p>
+    <h1>Painel de<br>Serviços</h1>
+    <p class="subtitle">Acesso restrito à equipe autorizada.</p>
+    <label for="senha">Senha de acesso</label>
+    <input type="password" id="senha" placeholder="••••••••••" autocomplete="current-password"/>
+    <button class="btn-login" onclick="entrar()">Entrar</button>
+    <p class="error-msg" id="erro"></p>
+    <p class="info">Após o login, o dashboard abrirá em tela cheia no Power BI.</p>
   </div>
 
   <script>
     const SENHA_CORRETA = 'comercialmt1';
     const PBI_URL = 'https://app.powerbi.com/view?r=eyJrIjoiZmQ4YzM4OTUtZjAzNS00NGFhLWI1Y2MtYWMzZTNiN2IwZDRmIiwidCI6IjNhZDRhYjQ1LTg4YmQtNGMyYi05YmRhLWFmMzBiODM0ZDI0MCJ9';
 
-    // Proporção original: 600 x 373.5
-    const RATIO = 373.5 / 600;
-
-    function ajustarAltura() {
-      const outer = document.getElementById('iframe-outer');
-      const frame = document.getElementById('pbi-frame');
-      const w = outer.clientWidth;
-      const h = outer.clientHeight;
-      const alturaCalculada = w * RATIO;
-
-      if (alturaCalculada <= h) {
-        // Cabe na tela — usa largura total e centra verticalmente
-        frame.style.width  = '100%';
-        frame.style.height = alturaCalculada + 'px';
-        frame.style.top    = ((h - alturaCalculada) / 2) + 'px';
-        frame.style.left   = '0';
-      } else {
-        // Mais alto que a tela — usa altura total e centra horizontalmente
-        const larguraCalculada = h / RATIO;
-        frame.style.height = '100%';
-        frame.style.width  = larguraCalculada + 'px';
-        frame.style.top    = '0';
-        frame.style.left   = ((w - larguraCalculada) / 2) + 'px';
-      }
-    }
-
     function entrar() {
       const valor = document.getElementById('senha').value;
       const erro  = document.getElementById('erro');
       if (valor === SENHA_CORRETA) {
-        sessionStorage.setItem('mt1_auth', '1');
-        mostrarDashboard();
+        window.location.href = PBI_URL;
       } else {
         erro.textContent = 'Senha incorreta. Tente novamente.';
         document.getElementById('senha').value = '';
@@ -222,24 +127,6 @@
       }
     }
 
-    function mostrarDashboard() {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('dashboard-screen').style.display = 'flex';
-      document.getElementById('pbi-frame').src = PBI_URL;
-      setTimeout(ajustarAltura, 100);
-    }
-
-    function sair() {
-      sessionStorage.removeItem('mt1_auth');
-      document.getElementById('dashboard-screen').style.display = 'none';
-      document.getElementById('login-screen').style.display = 'flex';
-      document.getElementById('pbi-frame').src = '';
-      document.getElementById('senha').value = '';
-      document.getElementById('erro').textContent = '';
-    }
-
-    window.addEventListener('resize', ajustarAltura);
-    if (sessionStorage.getItem('mt1_auth') === '1') mostrarDashboard();
     document.getElementById('senha').addEventListener('keydown', e => {
       if (e.key === 'Enter') entrar();
     });
