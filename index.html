@@ -6,7 +6,15 @@
   <title>Painel de Serviços · MT1</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #0f1117;
+      color: #e8eaf2;
+      font-family: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     :root {
       --bg:        #0f1117;
@@ -18,20 +26,12 @@
       --muted:     #7a7f9a;
       --danger:    #e05c6a;
       --radius:    12px;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      --header-h:  58px;
     }
 
     /* ── LOGIN ── */
     #login-screen {
-      flex: 1;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -48,8 +48,7 @@
       box-shadow: 0 24px 64px rgba(0,0,0,.45);
     }
 
-    .login-card .eyebrow {
-      font-family: 'Inter', sans-serif;
+    .eyebrow {
       font-size: 11px;
       font-weight: 600;
       letter-spacing: .12em;
@@ -67,7 +66,7 @@
       color: #fff;
     }
 
-    .login-card .subtitle {
+    .subtitle {
       font-size: 13.5px;
       color: var(--muted);
       margin-bottom: 36px;
@@ -121,51 +120,35 @@
       color: var(--danger);
       text-align: center;
       min-height: 20px;
-      transition: opacity .2s;
     }
 
     /* ── DASHBOARD ── */
     #dashboard-screen {
       display: none;
       flex-direction: column;
-      flex: 1;
-      height: 100vh;
+      height: 100%;
     }
 
     header {
+      height: var(--header-h);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 24px;
+      padding: 0 24px;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
 
-    header .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    .brand { display: flex; align-items: center; gap: 10px; }
     .brand-dot {
       width: 10px; height: 10px;
       background: var(--accent);
       border-radius: 50%;
       box-shadow: 0 0 8px var(--accent);
     }
-
-    header .brand-name {
-      font-family: 'Sora', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    header .brand-sub {
-      font-size: 12px;
-      color: var(--muted);
-    }
+    .brand-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
+    .brand-sub  { font-size: 12px; color: var(--muted); }
 
     .btn-logout {
       background: transparent;
@@ -181,15 +164,20 @@
     }
     .btn-logout:hover { color: var(--text); border-color: var(--muted); }
 
-    .iframe-wrap {
+    /* ── IFRAME ── */
+    .iframe-outer {
       flex: 1;
-      padding: 0;
       overflow: hidden;
+      position: relative;
+      background: #fff;
     }
 
-    .iframe-wrap iframe {
-      width: 100%;
-      height: 100%;
+    .iframe-scaler {
+      position: absolute;
+      transform-origin: top left;
+    }
+
+    .iframe-scaler iframe {
       border: none;
       display: block;
     }
@@ -203,10 +191,8 @@
       <p class="eyebrow">MT1 · Comercial</p>
       <h1>Painel de<br>Serviços</h1>
       <p class="subtitle">Acesso restrito à equipe autorizada.</p>
-
       <label for="senha">Senha de acesso</label>
       <input type="password" id="senha" placeholder="••••••••••" autocomplete="current-password"/>
-
       <button class="btn-login" onclick="entrar()">Entrar</button>
       <p class="error-msg" id="erro"></p>
     </div>
@@ -225,24 +211,49 @@
       <button class="btn-logout" onclick="sair()">Sair</button>
     </header>
 
-    <div class="iframe-wrap">
-      <iframe
-        id="pbi-frame"
-        title="[MT1] - Painel de Serviços 1 - acompanhamento"
-        allowfullscreen="true"
-        src="">
-      </iframe>
+    <div class="iframe-outer" id="iframe-outer">
+      <div class="iframe-scaler" id="iframe-scaler">
+        <iframe
+          id="pbi-frame"
+          title="[MT1] - Painel de Serviços"
+          allowfullscreen="true"
+          src="">
+        </iframe>
+      </div>
     </div>
   </div>
 
   <script>
     const SENHA_CORRETA = 'comercialmt1';
+    // URL base sem pageName para mostrar navegação entre páginas
     const PBI_URL = 'https://app.powerbi.com/view?r=eyJrIjoiZmQ4YzM4OTUtZjAzNS00NGFhLWI1Y2MtYWMzZTNiN2IwZDRmIiwidCI6IjNhZDRhYjQ1LTg4YmQtNGMyYi05YmRhLWFmMzBiODM0ZDI0MCJ9';
+
+    // Dimensões reais do relatório (do iframe oficial do Power BI)
+    const PBI_W = 1024;
+    const PBI_H = 1060;
+
+    function escalarIframe() {
+      const outer  = document.getElementById('iframe-outer');
+      const scaler = document.getElementById('iframe-scaler');
+      const frame  = document.getElementById('pbi-frame');
+
+      const availW = outer.clientWidth;
+      const availH = outer.clientHeight;
+      const scale  = Math.min(availW / PBI_W, availH / PBI_H);
+
+      frame.style.width  = PBI_W + 'px';
+      frame.style.height = PBI_H + 'px';
+      scaler.style.width  = PBI_W + 'px';
+      scaler.style.height = PBI_H + 'px';
+      scaler.style.transform = `scale(${scale})`;
+
+      scaler.style.left = ((availW - PBI_W * scale) / 2) + 'px';
+      scaler.style.top  = ((availH - PBI_H * scale) / 2) + 'px';
+    }
 
     function entrar() {
       const valor = document.getElementById('senha').value;
       const erro  = document.getElementById('erro');
-
       if (valor === SENHA_CORRETA) {
         sessionStorage.setItem('mt1_auth', '1');
         mostrarDashboard();
@@ -254,24 +265,25 @@
     }
 
     function mostrarDashboard() {
-      document.getElementById('login-screen').style.display    = 'none';
+      document.getElementById('login-screen').style.display = 'none';
       document.getElementById('dashboard-screen').style.display = 'flex';
       document.getElementById('pbi-frame').src = PBI_URL;
+      setTimeout(escalarIframe, 50);
     }
 
     function sair() {
       sessionStorage.removeItem('mt1_auth');
       document.getElementById('dashboard-screen').style.display = 'none';
-      document.getElementById('login-screen').style.display     = 'flex';
+      document.getElementById('login-screen').style.display = 'flex';
       document.getElementById('pbi-frame').src = '';
-      document.getElementById('senha').value   = '';
+      document.getElementById('senha').value = '';
       document.getElementById('erro').textContent = '';
     }
 
-    // Mantém sessão enquanto a aba estiver aberta
+    window.addEventListener('resize', escalarIframe);
+
     if (sessionStorage.getItem('mt1_auth') === '1') mostrarDashboard();
 
-    // Enter para logar
     document.getElementById('senha').addEventListener('keydown', e => {
       if (e.key === 'Enter') entrar();
     });
