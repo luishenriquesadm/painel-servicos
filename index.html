@@ -13,6 +13,7 @@
       background: #0f1117;
       color: #e8eaf2;
       font-family: 'Inter', sans-serif;
+      overflow: hidden;
     }
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -28,7 +29,6 @@
       --header-h:  58px;
     }
 
-    /* ── LOGIN ── */
     #login-screen {
       height: 100%;
       display: flex;
@@ -48,80 +48,51 @@
     }
 
     .eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--accent-hl);
-      margin-bottom: 8px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--accent-hl); margin-bottom: 8px;
     }
 
     .login-card h1 {
       font-family: 'Sora', sans-serif;
-      font-size: 26px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 6px;
-      color: #fff;
+      font-size: 26px; font-weight: 700;
+      line-height: 1.2; margin-bottom: 6px; color: #fff;
     }
 
-    .subtitle {
-      font-size: 13.5px;
-      color: var(--muted);
-      margin-bottom: 36px;
-    }
+    .subtitle { font-size: 13.5px; color: var(--muted); margin-bottom: 36px; }
 
     label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
+      display: block; font-size: 12px; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
     }
 
     input[type="password"] {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 15px;
-      color: var(--text);
-      outline: none;
-      transition: border-color .2s;
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 14px; font-size: 15px; color: var(--text);
+      outline: none; transition: border-color .2s;
       font-family: 'Inter', sans-serif;
     }
     input[type="password"]::placeholder { color: var(--muted); }
     input[type="password"]:focus { border-color: var(--accent); }
 
     .btn-login {
-      margin-top: 20px;
-      width: 100%;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 13px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
+      margin-top: 20px; width: 100%; background: var(--accent);
+      color: #fff; border: none; border-radius: 8px;
+      padding: 13px; font-size: 15px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif;
       transition: background .2s, transform .1s;
     }
     .btn-login:hover  { background: var(--accent-hl); }
     .btn-login:active { transform: scale(.98); }
 
     .error-msg {
-      margin-top: 14px;
-      font-size: 13px;
-      color: var(--danger);
-      text-align: center;
-      min-height: 20px;
+      margin-top: 14px; font-size: 13px;
+      color: var(--danger); text-align: center; min-height: 20px;
     }
 
-    /* ── DASHBOARD ── */
+    /* DASHBOARD */
     #dashboard-screen {
       display: none;
       flex-direction: column;
@@ -130,8 +101,7 @@
 
     header {
       height: var(--header-h);
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
       padding: 0 24px;
       background: var(--surface);
@@ -141,33 +111,27 @@
 
     .brand { display: flex; align-items: center; gap: 10px; }
     .brand-dot {
-      width: 10px; height: 10px;
-      background: var(--accent);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--accent);
+      width: 10px; height: 10px; background: var(--accent);
+      border-radius: 50%; box-shadow: 0 0 8px var(--accent);
     }
     .brand-name { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 700; color: #fff; }
     .brand-sub  { font-size: 12px; color: var(--muted); }
 
     .btn-logout {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      padding: 7px 14px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 7px; padding: 7px 14px; font-size: 12px;
+      font-weight: 500; color: var(--muted); cursor: pointer;
       font-family: 'Inter', sans-serif;
       transition: color .2s, border-color .2s;
     }
     .btn-logout:hover { color: var(--text); border-color: var(--muted); }
 
-    /* ── IFRAME ocupa tudo ── */
+    /* IFRAME wrapper com padding-top para manter proporção 16:9 */
     .iframe-outer {
       flex: 1;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
+      background: #fff;
     }
 
     .iframe-outer iframe {
@@ -181,7 +145,6 @@
 </head>
 <body>
 
-  <!-- LOGIN -->
   <div id="login-screen">
     <div class="login-card">
       <p class="eyebrow">MT1 · Comercial</p>
@@ -194,7 +157,6 @@
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="dashboard-screen">
     <header>
       <div class="brand">
@@ -207,7 +169,7 @@
       <button class="btn-logout" onclick="sair()">Sair</button>
     </header>
 
-    <div class="iframe-outer">
+    <div class="iframe-outer" id="iframe-outer">
       <iframe
         id="pbi-frame"
         title="[MT1] - Painel de Serviços"
@@ -220,6 +182,32 @@
   <script>
     const SENHA_CORRETA = 'comercialmt1';
     const PBI_URL = 'https://app.powerbi.com/view?r=eyJrIjoiZmQ4YzM4OTUtZjAzNS00NGFhLWI1Y2MtYWMzZTNiN2IwZDRmIiwidCI6IjNhZDRhYjQ1LTg4YmQtNGMyYi05YmRhLWFmMzBiODM0ZDI0MCJ9';
+
+    // Proporção original: 600 x 373.5
+    const RATIO = 373.5 / 600;
+
+    function ajustarAltura() {
+      const outer = document.getElementById('iframe-outer');
+      const frame = document.getElementById('pbi-frame');
+      const w = outer.clientWidth;
+      const h = outer.clientHeight;
+      const alturaCalculada = w * RATIO;
+
+      if (alturaCalculada <= h) {
+        // Cabe na tela — usa largura total e centra verticalmente
+        frame.style.width  = '100%';
+        frame.style.height = alturaCalculada + 'px';
+        frame.style.top    = ((h - alturaCalculada) / 2) + 'px';
+        frame.style.left   = '0';
+      } else {
+        // Mais alto que a tela — usa altura total e centra horizontalmente
+        const larguraCalculada = h / RATIO;
+        frame.style.height = '100%';
+        frame.style.width  = larguraCalculada + 'px';
+        frame.style.top    = '0';
+        frame.style.left   = ((w - larguraCalculada) / 2) + 'px';
+      }
+    }
 
     function entrar() {
       const valor = document.getElementById('senha').value;
@@ -238,6 +226,7 @@
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('dashboard-screen').style.display = 'flex';
       document.getElementById('pbi-frame').src = PBI_URL;
+      setTimeout(ajustarAltura, 100);
     }
 
     function sair() {
@@ -249,8 +238,8 @@
       document.getElementById('erro').textContent = '';
     }
 
+    window.addEventListener('resize', ajustarAltura);
     if (sessionStorage.getItem('mt1_auth') === '1') mostrarDashboard();
-
     document.getElementById('senha').addEventListener('keydown', e => {
       if (e.key === 'Enter') entrar();
     });
